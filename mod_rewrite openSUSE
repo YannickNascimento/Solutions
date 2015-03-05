@@ -14,7 +14,7 @@ Solution â€“ enable mod_rewrite on SuSE linux
 
     Edit the file /etc/sysconfig/apache2 as root:
         Search for APACHE_MODULES, you should find a line like this
-        APACHE_MODULES="suexec access actions alias auth auth_dbm autoindex cgi dir env expires include log_config mime negotiation setenvif userdir ssl php4"
+        APACHE_MODULES="actions alias auth_basic authn_file authz_host authz_groupfile  authz_user autoindex cgi dir env expires include log_config mime negotiation setenvif ssl socache_shmcb userdir php5 reqtimeout authn_core authz_core"
         Add rewrite to the content in the list between the â€œ
         Save the changes and quit
     run SuSEconfig to update the apache configuration files
