@@ -1,0 +1,54 @@
+Enable mod_rewrite on SuSE Linux
+
+       Description of the problem
+       Solution â€“ enable mod_rewrite on SuSE linux
+       Check if mod_rewrite is installed and integrated in Apache
+       Test .htaccess rewrite rule on SuSE linux Apache
+       Enable custom Apache .htaccess mod_rewrite files on SuSE linux
+
+Description of the problem
+
+By default, SuSE doesnâ€™t enable the mod_rewrite rewrite module. Itâ€™s installed, but not enabled.
+Follow these steps to install it.
+Solution â€“ enable mod_rewrite on SuSE linux
+
+    Edit the file /etc/sysconfig/apache2 as root:
+        Search for APACHE_MODULES, you should find a line like this
+        APACHE_MODULES="suexec access actions alias auth auth_dbm autoindex cgi dir env expires include log_config mime negotiation setenvif userdir ssl php4"
+        Add rewrite to the content in the list between the â€œ
+        Save the changes and quit
+    run SuSEconfig to update the apache configuration files
+    run /etc/init.d/apache2 restart to restart the Apache server
+
+Now, the mod_rewrite is enabled and integrated.
+Check if mod_rewrite is installed and integrated in Apache
+
+You can check this e.g. with the following php file. Create a file in your document root of your webserver (default on SuSE: /srv/www/htdocs) and copy the following content into this file:
+
+<?php phpinfo(); ?>
+
+When you view this file with your browser, search for rewrite â€“ you should find one entry. If not â€“ check if you did all steps 1 to 3.
+Test .htaccess rewrite rule on SuSE linux Apache
+
+The next step is to create an initial .htaccess rewrite rule to test if itâ€™s working now. Create a file .htaccess in your document root (default on SuSE: /srv/www/htdocs) with the following content:
+
+Options +FollowSymlinks
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteBase /
+RewriteRule user/(.*)$ /user.php?user=$1
+</IfModule>
+
+This is a simple rule that redirects all urls with the format user/something to the script /user.php with the something as parameter user. The IfModule prevents Apache errors when mod_rewrite should disappear.
+
+If this doesnâ€™t work â€“ there is another pitfall of the default SuSE Apache installation: youâ€™re not allowed to create custom .htaccess files! So â€“ lets enable them
+Enable custom Apache .htaccess mod_rewrite files on SuSE linux
+
+   1. Edit the file /etc/apache2/default-server.conf with your prefered editor
+         1. Search for AllowOverride â€“ it should be below the line <Directory "/srv/www/htdocs">
+         2. Change AllowOverride None to AllowOverride All â€“ this will allow custom .htaccess rewrite rules
+         3. Save your changes and exit
+   2. run SuSEconfig to update the apache configuration files
+   3. run /etc/init.d/apache2 restart to restart the Apache server
+
+Thatâ€™s all, now you can test the .htaccess rewrite rule again and it will work.
